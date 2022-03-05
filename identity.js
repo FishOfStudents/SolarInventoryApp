@@ -1,4 +1,5 @@
 
+// hey
 
 let current_menu=[]
 const base=window.location.protocol + "//" + window.location.host + "/"
