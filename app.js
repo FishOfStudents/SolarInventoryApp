@@ -740,61 +740,54 @@ async function employee_list(){
 
 
 async function show_task_list(){
-if(!logged_in()){show_home();return}//in case followed a link after logging out. This prevents the user from using this feature when they are not authenticated.
+    if(!logged_in()){show_home();return}
+    
+    hide_menu()
+    console.log('at show_task_list.')
 
-//First we hide the menu
-hide_menu()
-console.log('at show_task_list.')
+    tag("canvas").innerHTML=`
+        <div class="page">
+        <div id="task-title" style="text-align:center"><h2>Store Tasks</h2></div>
+        <div id="task-message" style="width:100%"></div>
+        <div id="task_panel" style="width:100%">
+        </div>
+        </div>
+    `
+    
+    const params = {mode: "get_task_list",filter: ""}
+    console.log('params',params)
+    
+    let response=await post_data(params)
+    console.log('response',response)
 
-//building the HTML shell
-tag("canvas").innerHTML=`
-<div class="page">
-<div id="task-title" style="text-align:center"><h2>Store Tasks</h2></div>
-<div id="task-message" style="width:100%"></div>
-<div id="task_panel" style="width:100%">
-</div>
-</div>
-`
-//get the data from airtable through google apps script
-const params = {mode: "get_task_list",filter: ""}
-console.log('params',params)
+    const header=[`
+        <table>
+        <tr>
+        <th>Task</th>
+    `]
+    
+    header.push(`<th>Completed</th>`)
+    header.push(`<th>Change</th>`)
+    header.push("</tr>")
+    const html=[header.join("")]
 
-let response=await post_data(params)
-console.log('response',response)
+    for(record of response.task_list){
+        html.push("<tr>")
+        html.push(`<td>${record.fields.Name}</td>`)
+        html.push(`<td align='center'>${record.fields.Completed}</td>`)
+        if(record.fields.Completed==='No'){
+            html.push(`<td><a class="tools" onclick="mark_task_complete({id:'${record.id}', name:'${record.fields.Name}'})">Mark as Completed</a></td>`)
+        }
+        html.push("</tr>")
+    }
 
-//Build the table to display the report. The columns of the table are: Flavor, the stores available to the user, and the total inventory. Since only the owner is given the option to view inventory counts (see the autheticated_user global variable), all stores will be shown in the report.
-const header=[`
-<table>
-<tr>
-<th>Task</th>
-`]
-header.push(`<th>Completed</th>`)
-header.push(`<th>Change</th>`)
-header.push("</tr>")
-const html=[header.join("")]
-
-for(record of response.task_list){
-//add a new table row to the table for each flavor
-html.push("<tr>")
-//insert the task description
-html.push(`<td>${record.fields.Name}</td>`)
-//Insert the status of the task
-html.push(`<td align='center'>${record.fields.Completed}</td>`)
-if(record.fields.Completed==='No'){
-html.push(`<td><a class="tools" onclick="mark_task_complete({id:'${record.id}', name:'${record.fields.Name}'})">Mark as Completed</a></td>`)
-}
-html.push("</tr>")
-}
-
-html.push("</table>")
-tag("task_panel").innerHTML=html.join("")
-
+    html.push("</table>")
+    tag("task_panel").innerHTML=html.join("")
 }
 
 async function mark_task_complete(params){
-console.log('in mark_task_complete')
-payload = {mode:"mark_task_complete", id:params.id, name:params.name}
-const response=await post_data(payload)
-show_task_list()
-
+    console.log('in mark_task_complete')
+    payload = {mode:"mark_task_complete", id:params.id, name:params.name}
+    const response=await post_data(payload)
+    show_task_list()
 }
