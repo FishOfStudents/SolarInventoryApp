@@ -45,7 +45,7 @@ const authenticated_menu=[
     //This menu item allows the user to add additional users. Note the "roles" property of the object. Only users with the role of "manager", "owner", or "administrator" will see this menu item. User roles are not heirachical. All user types you wish to see a menu item must be listed in the elements of the array.
     {label:"Add Employee",function:"navigate({fn:'create_account'})", roles:["manager","owner","administrator"]}, 
     //This menu item adds the menu item for updating an inventory count. Notice how a parameter is passed to the "ice_cream_inventory" function
-    {label:"Enter Ice Cream Inventory",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'update'}})"},
+    {label:"Warehouse Inventory Dashboards",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'update'}})"},
     //the remaining menu items are added
     {label:"Ice Cream Inventory Summary",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'summary'}})", roles:["owner","administrator"]},
     {label:"Employee List",function:"navigate({fn:'employee_list'})"},
@@ -74,7 +74,7 @@ function show_home(){
     tag("canvas").innerHTML=` 
     <div class="center-screen">
     
-    <p><img height="${window.innerHeight * .6}" src="https://www.brookersicecream.com/wp-content/uploads/2018/08/brookers-logo-final-large.png"></p>
+    <p><img height="${window.innerHeight * .2}" src="https://images.squarespace-cdn.com/content/v1/5ce5aa4762304c0001329ab0/1558555566956-CFB6GJAB9LSTSHB9TJ1G/BPS.png?format=1500w"></p>
     <div style="text-align:center"></div>
     
     
