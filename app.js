@@ -45,9 +45,9 @@ const authenticated_menu=[
     //This menu item allows the user to add additional users. Note the "roles" property of the object. Only users with the role of "manager", "owner", or "administrator" will see this menu item. User roles are not heirachical. All user types you wish to see a menu item must be listed in the elements of the array.
     {label:"Add Employee",function:"navigate({fn:'create_account'})", roles:["manager","owner","administrator"]}, 
     //This menu item adds the menu item for updating an inventory count. Notice how a parameter is passed to the "ice_cream_inventory" function
-    {label:"Warehouse Inventory Dashboards",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'update'}})"},
+    {label:"Warehouse Inventory",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'update'}})"},
     //the remaining menu items are added
-    {label:"Ice Cream Inventory Summary",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'summary'}})", roles:["owner","administrator"]},
+    {label:"Warehouse Inventory Summary",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'summary'}})", roles:["owner","administrator"]},
     {label:"Employee List",function:"navigate({fn:'employee_list'})"},
     {label:"Task List",function:"navigate({fn:'show_task_list'})"},
     {label:"Admin Tools",id:"menu2", roles:["manager","owner","administrator"], menu:[
@@ -180,7 +180,7 @@ async function ice_cream_inventory(params){
         //building the HTML shell
         tag("canvas").innerHTML=` 
             <div class="page">
-                <div id="inventory-title" style="text-align:center"><h2>Ice Cream Inventory</h2></div>
+                <div id="inventory-title" style="text-align:center"><h2>Warehouse Inventory</h2></div>
                 <div id="inventory-message" style="width:100%"></div>
                 <div id="inventory_panel"  style="width:100%">
                 </div>
@@ -196,7 +196,7 @@ async function ice_cream_inventory(params){
             //we call the get_inventory_list function (mode) filtered to show only "Ice Cream" (filter) - note that there are other inventory items - in the store associated with this user (store).
             ice_cream_inventory({
                 mode:"get_inventory_list",
-                filter:"list='Ice Cream'",
+                filter:"list='Inventory'",
                 store:user_data.store[0]
             })
         }else{
@@ -206,7 +206,7 @@ async function ice_cream_inventory(params){
             tag("inventory-message").innerHTML='<i class="fas fa-spinner fa-pulse"></i>'
             ice_cream_inventory({
                 mode:"get_inventory_list",
-                filter:"list='Ice Cream'",
+                filter:"list='Inventory'",
                 store:user_data.store,
             })
 
