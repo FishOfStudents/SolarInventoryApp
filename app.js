@@ -45,9 +45,8 @@ const authenticated_menu=[
     //This menu item allows the user to add additional users. Note the "roles" property of the object. Only users with the role of "manager", "owner", or "administrator" will see this menu item. User roles are not heirachical. All user types you wish to see a menu item must be listed in the elements of the array.
     {label:"Add Employee",function:"navigate({fn:'create_account'})", roles:["manager","owner","administrator"]}, 
     //This menu item adds the menu item for updating an inventory count. Notice how a parameter is passed to the "ice_cream_inventory" function
-    {label:"Warehouse Inventory",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'update'}})"},
     //the remaining menu items are added
-    {label:"Warehouse Inventory Summary",home:"Inventory",function:"navigate({fn:'ice_cream_inventory',params:{style:'summary'}})", roles:["owner","administrator"]},
+    {label:"Warehouse Inventory", function:"navigate({fn:'show_solar_inventory_list'})"},
     {label:"Employee List",function:"navigate({fn:'employee_list'})"},
     {label:"Task List",function:"navigate({fn:'show_task_list'})"},
     {label:"Admin Tools",id:"menu2", roles:["manager","owner","administrator"], menu:[
@@ -738,6 +737,56 @@ async function employee_list(){
 
 }
 
+async function show_solar_inventory_list(){
+    if(!logged_in()){show_home();return}
+
+    hide_menu()
+    console.log('at show_solar_inventory_list.')
+
+    const params = {mode: "get_solar_inventory_list"}
+    console.log('params',params)
+    
+    let response=await post_data(params)
+    console.log('response',response)
+
+    tag("canvas").innerHTML=`
+    <div class="page">
+    <div id="task-title" style="text-align:center"><h2>Warehouse Inventory Dashboard</h2></div>
+    <div id="task-message" style="width:100%"></div>
+    <div id="task_panel" style="width:100%">
+    </div>
+    </div>
+    `
+
+    const header=[`
+        <table>
+        <tr>
+        <th>Warehouse</th>
+        <th>Equipment Model Name</th>
+        <th>Manufacturer</th>
+        <th>Type</th>
+        <th>Quantity</th>
+        `]
+
+    const html = [header.join("")]
+
+    for(const equipment_list_item of response.equipment_list){
+
+        console.log('equipment_list_item',equipment_list_item)
+        html.push('<tr>')
+        html.push(`<td>${response.warehouses[equipment_list_item.fields.Warehouse[0]]}</td>`)
+        html.push(`<td>${response.models[equipment_list_item.fields.Equipment[0]]}</td>`)
+        html.push(`<td>${response.manufacturers[equipment_list_item.fields.Manufacturer[0]]}</td>`)
+        html.push(`<td>${equipment_list_item.fields.Equipment_Type.join(',')}</td>`)
+        html.push(`<td>${equipment_list_item.fields.Quantity}</td>`)
+
+        html.push('</tr>')
+
+    }
+
+
+    tag('task_panel').innerHTML=html.join("")
+}
 
 async function show_task_list(){
     if(!logged_in()){show_home();return}
