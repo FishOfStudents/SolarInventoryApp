@@ -796,7 +796,7 @@ async function show_task_list(){
 
     tag("canvas").innerHTML=`
         <div class="page">
-        <div id="task-title" style="text-align:center"><h2>Store Tasks</h2></div>
+        <div id="task-title" style="text-align:center"><h2>Warehouse Tasks</h2></div>
         <div id="task-message" style="width:100%"></div>
         <div id="task_panel" style="width:100%">
         </div>
